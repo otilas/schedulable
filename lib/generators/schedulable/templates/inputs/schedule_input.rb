@@ -87,9 +87,7 @@ class ScheduleInput < SimpleForm::Inputs::Base
           end
         end << 
         
-        template.content_tag("div", data: {group: 'singular,daily,weekly,monthly'}) do
-          b.input :time, date_options.merge({as: input_types[:time]})
-        end << 
+        
         
         (if input_options[:interval]
           template.content_tag("div", data: {group: 'daily,weekly,monthly'}) do
@@ -106,6 +104,10 @@ class ScheduleInput < SimpleForm::Inputs::Base
         else
           b.input(:until, as: :hidden, input_html: {value: nil})
         end) <<
+        
+        template.content_tag("div", data: {group: 'singular,daily,weekly,monthly'}) do
+          b.input :time, date_options.merge({as: input_types[:time]})
+        end << 
         
         if input_options[:count]
           template.content_tag("div", data: {group: 'daily,weekly,monthly'}) do

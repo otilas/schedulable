@@ -10,8 +10,8 @@ en:
         time: Time
         date: Date
         rule: Rule
-        day: Weekdays
-        day_of_week: Weekdays of nth week
+        day: Scheduled Days
+        day_of_week: Sechduled Days of nth week
         until: Repeat until
         count: Repetition count
         
@@ -27,3 +27,4 @@ en:
       monthly: Monthly
       weekly: Weekly
       daily: Daily
+      yearly: Yearly

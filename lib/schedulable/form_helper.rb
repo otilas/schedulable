@@ -129,6 +129,17 @@ module Schedulable
               content_wrap(@template, f.send(input_types[:date].to_sym, *[:date].concat(f.method(input_types[:date].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
             end << 
             
+            # Until Date Time Select
+           (if input_options[:until]
+            
+             @template.content_tag("div", style_options[:field_html].merge({data: {group: 'daily,weekly,monthly'}})) do
+               content_wrap(@template, f.label(:until, style_options[:label_html]), style_options[:label_wrapper]) <<
+               content_wrap(@template, f.send(input_types[:datetime].to_sym, *[:until].concat(f.method(input_types[:datetime].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
+             end
+           else
+             f.hidden_field(:until, value: nil)
+           end) <<
+            
             # Weekly Checkboxes
             @template.content_tag("div", style_options[:field_html].merge({data: {group: 'weekly'}})) do
               content_wrap(@template, f.label(:day), style_options[:label_wrapper]) <<
@@ -183,17 +194,7 @@ module Schedulable
             else
               f.hidden_field(:interval, value: 1)
             end) <<
-            
-             # Until Date Time Select
-            (if input_options[:until]
-             
-              @template.content_tag("div", style_options[:field_html].merge({data: {group: 'daily,weekly,monthly'}})) do
-                content_wrap(@template, f.label(:until, style_options[:label_html]), style_options[:label_wrapper]) <<
-                content_wrap(@template, f.send(input_types[:datetime].to_sym, *[:until].concat(f.method(input_types[:datetime].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
-              end
-            else
-              f.hidden_field(:until, value: nil)
-            end) <<
+                        
             
             # Count Number Field
             if input_options[:count]
