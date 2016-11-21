@@ -124,21 +124,56 @@ module Schedulable
             
             
             # Date Select
+            #@template.content_tag("div", style_options[:field_html].merge({data: {group: input_options[:from] ? 'singular,daily,weekly,monthly' : 'singular'}})) do
+            #  content_wrap(@template, f.label(:start_date, style_options[:label_html].merge({ data: {group: 'singular'}})) << f.label(:start_date, style_options[:label_html].merge({ data: {group: 'daily,weekly,monthly'}})), style_options[:label_wrapper]) <<
+            #  content_wrap(@template, f.send(input_types[:start_date].to_sym, *[:start_date].concat(f.method(input_types[:date].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
+            #end << 
+            
+            # Start Date Select
             @template.content_tag("div", style_options[:field_html].merge({data: {group: input_options[:from] ? 'singular,daily,weekly,monthly' : 'singular'}})) do
-              content_wrap(@template, f.label(:date, style_options[:label_html].merge({ data: {group: 'singular'}})) << f.label(:start_date, style_options[:label_html].merge({ data: {group: 'daily,weekly,monthly'}})), style_options[:label_wrapper]) <<
-              content_wrap(@template, f.send(input_types[:date].to_sym, *[:date].concat(f.method(input_types[:date].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
-            end << 
+              content_wrap(@template, f.label(:start_date, style_options[:label_html].merge({ data: {group: 'singular'}})) << f.label(:start_date, style_options[:label_html].merge({ data: {group: 'daily,weekly,monthly'}})), style_options[:label_wrapper]) <<
+              content_wrap(@template, f.send(input_types[:date].to_sym, *[:start_date].concat(f.method(input_types[:date].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])           
+            end <<
+            
+            # End Date Select
+            (if input_options[:end_date]
+            
+              @template.content_tag("div", style_options[:field_html].merge({data: {group: 'daily,weekly,monthly'}})) do
+                content_wrap(@template, f.label(:end_date, style_options[:label_html]), style_options[:label_wrapper]) <<
+                content_wrap(@template, f.send(input_types[:date].to_sym, *[:end_date].concat(f.method(input_types[:date].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
+              end
+            else
+              f.hidden_field(:end_date, value: nil)
+            end) <<
+            
+            # Time Select
+            #@template.content_tag("div", style_options[:field_html].merge({data: {group: 'singular,daily,weekly,monthly'}})) do
+            #  content_wrap(@template, f.label(:time, style_options[:label_html]), style_options[:label_wrapper]) <<
+            #  content_wrap(@template, f.send(input_types[:time].to_sym, *[:time].concat(f.method(input_types[:time].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
+            #end <<
+            
+            # Start Time Select
+            @template.content_tag("div", style_options[:field_html].merge({data: {group: 'singular,daily,weekly,monthly'}})) do
+              content_wrap(@template, f.label(:start_time, style_options[:label_html]), style_options[:label_wrapper]) <<
+              content_wrap(@template, f.send(input_types[:time].to_sym, *[:start_time].concat(f.method(input_types[:time].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
+            end <<
+            
+            # End Time Select
+            @template.content_tag("div", style_options[:field_html].merge({data: {group: 'singular,daily,weekly,monthly'}})) do
+              content_wrap(@template, f.label(:end_time, style_options[:label_html]), style_options[:label_wrapper]) <<
+              content_wrap(@template, f.send(input_types[:time].to_sym, *[:end_time].concat(f.method(input_types[:time].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
+            end <<
             
             # Until Date Time Select
-           (if input_options[:until]
-            
-             @template.content_tag("div", style_options[:field_html].merge({data: {group: 'daily,weekly,monthly'}})) do
-               content_wrap(@template, f.label(:until, style_options[:label_html]), style_options[:label_wrapper]) <<
-               content_wrap(@template, f.send(input_types[:datetime].to_sym, *[:until].concat(f.method(input_types[:datetime].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
-             end
-           else
-             f.hidden_field(:until, value: nil)
-           end) <<
+            (if input_options[:until]
+             
+              @template.content_tag("div", style_options[:field_html].merge({data: {group: 'daily,weekly,monthly'}})) do
+                content_wrap(@template, f.label(:until, style_options[:label_html]), style_options[:label_wrapper]) <<
+                content_wrap(@template, f.send(input_types[:datetime].to_sym, *[:until].concat(f.method(input_types[:datetime].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
+              end
+            else
+              f.hidden_field(:until, value: nil)
+            end) <<
             
             # Weekly Checkboxes
             @template.content_tag("div", style_options[:field_html].merge({data: {group: 'weekly'}})) do
@@ -174,12 +209,6 @@ module Schedulable
                   end
                 end
               end
-            end <<
-            
-            # Time Select
-            @template.content_tag("div", style_options[:field_html].merge({data: {group: 'singular,daily,weekly,monthly'}})) do
-              content_wrap(@template, f.label(:time, style_options[:label_html]), style_options[:label_wrapper]) <<
-              content_wrap(@template, f.send(input_types[:time].to_sym, *[:time].concat(f.method(input_types[:time].to_sym).parameters.count >= 3 ? [date_options] : []).concat([style_options[:date_select_html].clone])), style_options[:date_select_wrapper])
             end <<
             
             # Optional Fields...

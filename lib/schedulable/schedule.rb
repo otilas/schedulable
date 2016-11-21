@@ -9,13 +9,20 @@ module Schedulable
 
       after_initialize :update_schedule
       before_save :update_schedule
-
+      
+      before_validation :handle_start_end_dates_and_times
+      
       validates_presence_of :rule
       validates_presence_of :time
-      validates_presence_of :date, if: Proc.new { |schedule| schedule.rule == 'singular' }
+      
+      validates_presence_of :start_time
+      validates_presence_of :end_time
+      
+      validates_presence_of :start_date, if: Proc.new { |schedule| schedule.rule == 'singular' }
+      
       validate :validate_day, if: Proc.new { |schedule| schedule.rule == 'weekly' }
       validate :validate_day_of_week, if: Proc.new { |schedule| schedule.rule == 'monthly' }
-
+      
       def to_icecube
         return @schedule
       end
@@ -47,7 +54,13 @@ module Schedulable
       end
 
       def self.param_names
-        [:id, :date, :time, :rule, :until, :count, :interval, day: [], day_of_week: [monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []]]
+        [:id, :start_date, :end_date, :start_time, :end_time, :time, :rule, :until, :count, :interval, day: [], day_of_week: [monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: []]]
+      end
+      
+      def handle_start_end_dates_and_times
+        self.date = start_date
+        self.time = start_time
+        self.until = DateTime.new(end_date.year, end_date.month, end_date.day, end_time.hour, end_time.min, end_time.sec, end_time.zone)
       end
 
       def update_schedule()
