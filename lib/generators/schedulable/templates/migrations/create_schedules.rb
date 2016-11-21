@@ -3,8 +3,13 @@ class CreateSchedules < ActiveRecord::Migration
     create_table :schedules do |t|
       t.references :schedulable, polymorphic: true
       
-      t.date :date 
-      t.time :time 
+      t.date :date # TODO: Check if we remove this
+      t.time :time # TODO: Check if we remove this
+      
+      t.date :start_date
+      t.date :end_date
+      
+      t.time :start_time
       t.time :end_time
       
       t.string :rule
@@ -13,7 +18,7 @@ class CreateSchedules < ActiveRecord::Migration
       t.text :day
       t.text :day_of_week
       
-      t.datetime :until
+      t.datetime :until # TODO: Check if we remove this
       t.integer :count
       
       t.timestamps
